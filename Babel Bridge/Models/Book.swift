@@ -1,44 +1,41 @@
 import Foundation
-struct Book: Identifiable, Codable {
 
-    let id: UUID
+struct Book: Identifiable {
+    let id = UUID()
     let title: String
     let author: String
+    let fileName: String
     let filePath: String
-    var translatedFilePath: String?
+    let fileSize: Int64
+    let targetLanguage: String
+    let translationMode: TranslationMode
+    let translationSpeed: TranslationSpeed
     var translationStatus: TranslationStatus
     
-    enum TranslationStatus: String, Codable {
-        case notStarted
-        case inProgress
-        case completed
-        case failed
-    }
-    
-    init(id: UUID = UUID(), title: String, author: String, filePath: String) {
-        self.id = id
+    init(
+        title: String = "未知标题",
+        author: String = "未知作者",
+        fileName: String,
+        filePath: String,
+        fileSize: Int64 = 0,
+        targetLanguage: String,
+        translationMode: TranslationMode,
+        translationSpeed: TranslationSpeed,
+        translationStatus: TranslationStatus
+    ) {
         self.title = title
         self.author = author
+        self.fileName = fileName
         self.filePath = filePath
-        self.translationStatus = .notStarted
-        self.targetFileName = ""
-        self.targetLanguage = ""
-        self.translationMode = .bilingual
-        self.translationSpeed = .normal
+        self.fileSize = fileSize
+        self.targetLanguage = targetLanguage
+        self.translationMode = translationMode
+        self.translationSpeed = translationSpeed
+        self.translationStatus = translationStatus
     }
-    
-    var targetFileName: String
-    var targetLanguage: String
-    var translationMode: TranslationMode
-    var translationSpeed: TranslationSpeed
-    
-    enum TranslationMode: String, Codable {
-        case bilingual = "双语对照"
-        case targetOnly = "仅目标语言"
-    }
-    
-    enum TranslationSpeed: String, Codable {
-        case normal = "普通"
-        case fast = "快速"
-    }
+}
+
+enum TranslationStatus {
+    case inProgress
+    case completed
 } 
