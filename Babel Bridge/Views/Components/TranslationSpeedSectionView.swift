@@ -16,11 +16,12 @@ struct TranslationSpeedSectionView: View {
                     .font(.headline)
                 
                 Picker("翻译速度", selection: $speed) {
-                    ForEach(TranslationSpeed.allCases, id: \.self) { speed in
+                    ForEach([TranslationSpeed.fast, TranslationSpeed.standard], id: \.self) { speed in
                         Text(speed.rawValue).tag(speed)
                     }
                 }
                 .pickerStyle(.segmented)
+                .frame(height: 62) // 添加固定高度
             }
             .padding(.vertical, 8)
         }

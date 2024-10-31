@@ -78,13 +78,9 @@ class EPUBManager: ObservableObject {
         case .fast:
             config.batchSize = 5000
             config.qualityCheck = false
-        case .normal:
+        case .standard:
             config.batchSize = 2000
             config.qualityCheck = true
-        case .careful:
-            config.batchSize = 1000
-            config.qualityCheck = true
-            config.doubleCheck = true
         }
         
         return config

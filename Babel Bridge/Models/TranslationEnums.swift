@@ -16,10 +16,8 @@ extension TranslationSpeed {
         switch self {
         case .fast:
             return "更快的翻译速度，适合时间紧迫的场景"
-        case .normal:
+        case .standard:
             return "平衡的翻译速度，适合一般性需求"
-        case .careful:
-            return "更谨慎的翻译速度，适合需要高质量的场景"
         }
     }
 } 

@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct NewTranslationView: View {
@@ -9,7 +8,7 @@ struct NewTranslationView: View {
     @State private var selectedFile: URL?
     @State private var selectedLanguage: String = "英语"
     @State private var translationMode: TranslationMode = .standard
-    @State private var translationSpeed: TranslationSpeed = .normal
+    @State private var translationSpeed: TranslationSpeed = .standard
     
     // 常量
     private let availableLanguages = ["英语", "日语", "韩语", "法语", "德语"]
@@ -37,7 +36,6 @@ struct NewTranslationView: View {
                     
                     Spacer()
                     
-                    // 提交按钮
                     Button(action: submitTranslation) {
                         HStack {
                             Text("提交翻译")
@@ -91,8 +89,7 @@ enum TranslationMode: String, CaseIterable {
 
 enum TranslationSpeed: String, CaseIterable {
     case fast = "快速"
-    case normal = "标准"
-    case careful = "细致"
+    case standard = "标准"
 }
 
 // 预览
