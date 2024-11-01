@@ -21,15 +21,7 @@ struct NewTranslationView: View {
                     VStack(alignment: .leading, spacing: 24) {
                         ExplanationSectionView()
                         
-                        FileUploadSectionView(selectedFile: $selectedFile)
-                        
-                        if let url = selectedFile {
-                            // 添加文件分析视图
-                            FileAnalysisView(viewModel: analysisViewModel, url: url)
-                                .padding(.vertical, 8)
-                                .background(Color(.systemBackground))
-                                .cornerRadius(10)
-                        }
+                        FileSelectionAndAnalysisView(selectedFile: $selectedFile)
                         
                         TargetLanguageSectionView(
                             selectedLanguage: $selectedLanguage,
@@ -81,7 +73,7 @@ struct NewTranslationView: View {
             translationMode: translationMode,
             translationSpeed: translationSpeed,
             translationStatus: .inProgress,
-            wordCount: analysisViewModel.wordCount ?? 0 // 添加字数信息
+            wordCount: analysisViewModel.bookInfo?.wordCount ?? 0 // 添加字数信息
         )
         
         viewModel.addBook(newBook)

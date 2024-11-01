@@ -3,14 +3,13 @@ import SwiftUI
 struct FileUploadSectionView: View {
     @Binding var selectedFile: URL?
     @State private var isFilePickerPresented = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("选择文件")
                 .font(.headline)
-            
+
             Button(action: {
-                print("Button tapped")
                 isFilePickerPresented = true
             }) {
                 HStack {
@@ -27,17 +26,17 @@ struct FileUploadSectionView: View {
             isPresented: $isFilePickerPresented,
             allowedContentTypes: [
                 .text,
-                .init(filenameExtension: "epub")!
+                .init(filenameExtension: "epub")!,
             ],
             allowsMultipleSelection: false
         ) { result in
             switch result {
-            case .success(let urls):
+            case let .success(urls):
                 if let url = urls.first {
                     selectedFile = url
                     print("Selected file: \(url.path)")
                 }
-            case .failure(let error):
+            case let .failure(error):
                 print("File selection error: \(error.localizedDescription)")
             }
         }

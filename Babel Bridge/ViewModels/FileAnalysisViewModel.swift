@@ -1,22 +1,34 @@
 import Foundation
 
 class FileAnalysisViewModel: ObservableObject {
-    @Published var wordCount: Int?
     @Published var isAnalyzing = false
     @Published var error: Error?
+    @Published var bookInfo: BookInfo?
     
     private let epubService = EPUBService()
+    
+    func reset() {
+        isAnalyzing = false
+        error = nil
+        bookInfo = nil
+    }
     
     func analyzeFile(_ url: URL) {
         isAnalyzing = true
         error = nil
-        wordCount = nil
+        bookInfo = nil
         
-        DispatchQueue.global(qos: .userInitiated).async {
+        Task {
             do {
-                let count = try self.epubService.countWordsInEPUB(at: url)
+                let wordCount = try epubService.countWordsInEPUB(at: url)
+                
                 DispatchQueue.main.async {
-                    self.wordCount = count
+                    self.bookInfo = BookInfo(
+                        title: url.lastPathComponent,
+                        author: nil,
+                        wordCount: wordCount,
+                        language: nil
+                    )
                     self.isAnalyzing = false
                 }
             } catch {
@@ -27,4 +39,11 @@ class FileAnalysisViewModel: ObservableObject {
             }
         }
     }
+}
+
+struct BookInfo {
+    let title: String
+    let author: String?
+    let wordCount: Int
+    let language: String?
 } 

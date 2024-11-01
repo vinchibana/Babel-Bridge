@@ -7,7 +7,7 @@ struct FileAnalysisView: View {
     var body: some View {
         Group {
             if viewModel.isAnalyzing {
-                ProgressView("正在统计字数...")
+                ProgressView("正在解析文件并评估价格...")
             } else if let error = viewModel.error {
                 VStack {
                     Image(systemName: "exclamationmark.triangle")
@@ -22,11 +22,11 @@ struct FileAnalysisView: View {
                         .multilineTextAlignment(.center)
                         .padding()
                 }
-            } else if let wordCount = viewModel.wordCount {
+            }  else if let wordCount = viewModel.bookInfo?.wordCount {  // 修改这里
                 List {
                     Section("统计信息") {
-                        InfoRow(title: "文件名", value: url.lastPathComponent)
-                        InfoRow(title: "总字数", value: formatNumber(wordCount))
+                        BookInfoView(title: "文件名", value: url.lastPathComponent)
+                        BookInfoView(title: "总字数", value: formatNumber(wordCount))
                     }
                 }
             }
@@ -44,7 +44,7 @@ struct FileAnalysisView: View {
     }
 }
 
-struct InfoRow: View {
+struct BookInfoView: View {
     let title: String
     let value: String
     
@@ -57,6 +57,7 @@ struct InfoRow: View {
         }
     }
 }
+
 
 // 预览
 struct FileAnalysisView_Previews: PreviewProvider {
@@ -76,7 +77,12 @@ struct FileAnalysisView_Previews: PreviewProvider {
             FileAnalysisView(
                 viewModel: {
                     let vm = FileAnalysisViewModel()
-                    vm.wordCount = 100000
+                    vm.bookInfo = BookInfo(
+                        title: "示例书籍",
+                        author: "作者名",
+                        wordCount: 100000,
+                        language: "中文"
+                    )
                     return vm
                 }(),
                 url: URL(fileURLWithPath: "example.epub")
@@ -93,4 +99,4 @@ struct FileAnalysisView_Previews: PreviewProvider {
             )
         }
     }
-} 
+}
