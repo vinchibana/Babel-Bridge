@@ -9,6 +9,7 @@ struct NewTranslationView: View {
     @State private var selectedLanguage: String = "英语"
     @State private var translationMode: TranslationMode = .standard
     @State private var translationSpeed: TranslationSpeed = .standard
+    @StateObject private var analysisViewModel = FileAnalysisViewModel()
     
     // 常量
     private let availableLanguages = ["英语", "日语", "韩语", "法语", "德语"]
@@ -16,40 +17,47 @@ struct NewTranslationView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    ExplanationSectionView()
-                    
-                    FileUploadSectionView(selectedFile: $selectedFile)
-                    
-                    if let fileName = selectedFile?.lastPathComponent {
-                        FileNameSectionView(fileName: fileName)
-                    }
-                    
-                    TargetLanguageSectionView(
-                        selectedLanguage: $selectedLanguage,
-                        availableLanguages: availableLanguages
-                    )
-                    
-                    TranslationModeSectionView(mode: $translationMode)
-                    
-                    TranslationSpeedSectionView(speed: $translationSpeed)
-                    
-                    Spacer()
-                    
-                    Button(action: submitTranslation) {
-                        HStack {
-                            Text("提交翻译")
-                            Image(systemName: "arrow.right")
+                VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 24) {
+                        ExplanationSectionView()
+                        
+                        FileUploadSectionView(selectedFile: $selectedFile)
+                        
+                        if let url = selectedFile {
+                            // 添加文件分析视图
+                            FileAnalysisView(viewModel: analysisViewModel, url: url)
+                                .padding(.vertical, 8)
+                                .background(Color(.systemBackground))
+                                .cornerRadius(10)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(selectedFile != nil ? Color.blue : Color.gray)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                        
+                        TargetLanguageSectionView(
+                            selectedLanguage: $selectedLanguage,
+                            availableLanguages: availableLanguages
+                        )
+                        
+                        TranslationModeSectionView(mode: $translationMode)
+                        
+                        TranslationSpeedSectionView(speed: $translationSpeed)
+                        
+                        Spacer()
+                        
+                        Button(action: submitTranslation) {
+                            HStack {
+                                Text("提交翻译")
+                                Image(systemName: "arrow.right")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
+                        .disabled(selectedFile == nil || analysisViewModel.error != nil || analysisViewModel.isAnalyzing)
                     }
-                    .disabled(selectedFile == nil)
+                    .padding(.horizontal, 16)
                 }
-                .padding()
+                .padding(.vertical, 16)
             }
             .navigationTitle("新增翻译")
             .navigationBarItems(
@@ -68,11 +76,12 @@ struct NewTranslationView: View {
         
         let newBook = Book(
             fileName: url.lastPathComponent,
-            filePath: url.path,           // 添加文件路径
+            filePath: url.path,
             targetLanguage: selectedLanguage,
             translationMode: translationMode,
             translationSpeed: translationSpeed,
-            translationStatus: .inProgress
+            translationStatus: .inProgress,
+            wordCount: analysisViewModel.wordCount ?? 0 // 添加字数信息
         )
         
         viewModel.addBook(newBook)

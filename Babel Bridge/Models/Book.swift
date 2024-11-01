@@ -11,6 +11,7 @@ struct Book: Identifiable {
     let translationMode: TranslationMode
     let translationSpeed: TranslationSpeed
     var translationStatus: TranslationStatus
+    let wordCount: Int?
     
     init(
         title: String = "未知标题",
@@ -21,7 +22,8 @@ struct Book: Identifiable {
         targetLanguage: String,
         translationMode: TranslationMode,
         translationSpeed: TranslationSpeed,
-        translationStatus: TranslationStatus
+        translationStatus: TranslationStatus,
+        wordCount: Int
     ) {
         self.title = title
         self.author = author
@@ -32,6 +34,7 @@ struct Book: Identifiable {
         self.translationMode = translationMode
         self.translationSpeed = translationSpeed
         self.translationStatus = translationStatus
+        self.wordCount = wordCount
     }
 }
 

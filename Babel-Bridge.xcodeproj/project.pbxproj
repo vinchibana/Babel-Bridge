@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5002BBA22CD4301200FC1D46 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 5002BBA12CD4301200FC1D46 /* ZIPFoundation */; };
 		5002BBA52CD4308200FC1D46 /* SWXMLHash in Frameworks */ = {isa = PBXBuildFile; productRef = 5002BBA42CD4308200FC1D46 /* SWXMLHash */; };
+		5002BBE52CD449C400FC1D46 /* EPUBKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5002BBE42CD449C400FC1D46 /* EPUBKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5002BBE52CD449C400FC1D46 /* EPUBKit in Frameworks */,
 				5002BBA52CD4308200FC1D46 /* SWXMLHash in Frameworks */,
 				5002BBA22CD4301200FC1D46 /* ZIPFoundation in Frameworks */,
 			);
@@ -74,6 +76,7 @@
 			packageProductDependencies = (
 				5002BBA12CD4301200FC1D46 /* ZIPFoundation */,
 				5002BBA42CD4308200FC1D46 /* SWXMLHash */,
+				5002BBE42CD449C400FC1D46 /* EPUBKit */,
 			);
 			productName = "Babel Bridge";
 			productReference = 5002BB5E2CD41CDF00FC1D46 /* Babel Bridge.app */;
@@ -94,7 +97,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5002BB592CD41CDF00FC1D46 /* Build configuration list for PBXProject "Babel Bridge" */;
+			buildConfigurationList = 5002BB592CD41CDF00FC1D46 /* Build configuration list for PBXProject "Babel-Bridge" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -106,6 +109,7 @@
 			packageReferences = (
 				5002BBA02CD4301200FC1D46 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				5002BBA32CD4308200FC1D46 /* XCRemoteSwiftPackageReference "SWXMLHash" */,
+				5002BBE32CD449C400FC1D46 /* XCRemoteSwiftPackageReference "EPUBKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5002BB5F2CD41CDF00FC1D46 /* Products */;
@@ -328,7 +332,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5002BB592CD41CDF00FC1D46 /* Build configuration list for PBXProject "Babel Bridge" */ = {
+		5002BB592CD41CDF00FC1D46 /* Build configuration list for PBXProject "Babel-Bridge" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5002BB6C2CD41CE000FC1D46 /* Debug */,
@@ -365,6 +369,14 @@
 				minimumVersion = 8.1.0;
 			};
 		};
+		5002BBE32CD449C400FC1D46 /* XCRemoteSwiftPackageReference "EPUBKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/witekbobrowski/EPUBKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -377,6 +389,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5002BBA32CD4308200FC1D46 /* XCRemoteSwiftPackageReference "SWXMLHash" */;
 			productName = SWXMLHash;
+		};
+		5002BBE42CD449C400FC1D46 /* EPUBKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5002BBE32CD449C400FC1D46 /* XCRemoteSwiftPackageReference "EPUBKit" */;
+			productName = EPUBKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -15,6 +15,5 @@ struct TargetLanguageSectionView: View {
             }
             .pickerStyle(.menu)
         }
-        .padding(.horizontal)
     }
 } 

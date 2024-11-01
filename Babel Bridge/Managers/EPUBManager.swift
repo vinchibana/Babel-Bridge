@@ -37,7 +37,8 @@ class EPUBManager: ObservableObject {
                 targetLanguage: targetLanguage,
                 translationMode: mode,
                 translationSpeed: speed,
-                translationStatus: .inProgress
+                translationStatus: .inProgress,
+                wordCount: 0
             )
             
             // 5. 保存翻译结果
