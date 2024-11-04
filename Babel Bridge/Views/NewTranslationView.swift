@@ -3,37 +3,37 @@ import SwiftUI
 struct NewTranslationView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var viewModel: BookViewModel
-    
+
     // 状态变量
     @State private var selectedFile: URL?
     @State private var selectedLanguage: String = "英语"
     @State private var translationMode: TranslationMode = .standard
     @State private var translationSpeed: TranslationSpeed = .standard
     @StateObject private var analysisViewModel = FileAnalysisViewModel()
-    
+
     // 常量
     private let availableLanguages = ["英语", "日语", "韩语", "法语", "德语"]
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading, spacing: 24) {
                         ExplanationSectionView()
-                        
+
                         FileSelectionAndAnalysisView(selectedFile: $selectedFile)
-                        
+
                         TargetLanguageSectionView(
                             selectedLanguage: $selectedLanguage,
                             availableLanguages: availableLanguages
                         )
-                        
+
                         TranslationModeSectionView(mode: $translationMode)
-                        
+
                         TranslationSpeedSectionView(speed: $translationSpeed)
-                        
+
                         Spacer()
-                        
+
                         Button(action: submitTranslation) {
                             HStack {
                                 Text("提交翻译")
@@ -62,10 +62,10 @@ struct NewTranslationView: View {
             )
         }
     }
-    
+
     private func submitTranslation() {
         guard let url = selectedFile else { return }
-        
+
         let newBook = Book(
             fileName: url.lastPathComponent,
             filePath: url.path,
@@ -75,7 +75,7 @@ struct NewTranslationView: View {
             translationStatus: .inProgress,
             wordCount: analysisViewModel.bookInfo?.wordCount ?? 0 // 添加字数信息
         )
-        
+
         viewModel.addBook(newBook)
         dismiss()
     }
@@ -97,4 +97,4 @@ enum TranslationSpeed: String, CaseIterable {
 #Preview {
     NewTranslationView()
         .environmentObject(BookViewModel())
-} 
+}
