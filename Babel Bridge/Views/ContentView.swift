@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var viewModel = BookViewModel()
     @State private var isShowingNewTranslation = false
-    
+
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 20) {
@@ -29,7 +29,7 @@ struct ContentView: View {
                         }
                     }
                 }
-                
+
                 // 历史记录部分
                 VStack(alignment: .leading) {
                     Text("历史记录")
@@ -39,9 +39,9 @@ struct ContentView: View {
                         BookRow(book: book)
                     }
                 }
-                
+
                 Spacer()
-                
+
                 // 新增翻译按钮
                 Button(action: { isShowingNewTranslation = true }) {
                     HStack {
@@ -72,7 +72,6 @@ struct ContentView: View {
         }
     }
 }
-
 
 #Preview {
     ContentView()

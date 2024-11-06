@@ -5,8 +5,8 @@
 //  Created by 邱鑫 on 10/31/24.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct Babel_BridgeApp: App {
