@@ -10,6 +10,9 @@ struct NewTranslationView: View {
     @State private var translationMode: TranslationMode = .standard
     @State private var translationSpeed: TranslationSpeed = .standard
     @StateObject private var analysisViewModel = FileAnalysisViewModel()
+    @StateObject private var storeService = StoreKitService.shared
+    @State private var showingPaymentError = false
+    @State private var paymentErrorMessage = ""
 
     // 常量
     private let availableLanguages = ["英语", "日语", "韩语", "法语", "德语"]
@@ -21,7 +24,10 @@ struct NewTranslationView: View {
                     VStack(alignment: .leading, spacing: 24) {
                         ExplanationSectionView()
 
-                        FileSelectionAndAnalysisView(selectedFile: $selectedFile)
+                        FileSelectionAndAnalysisView(
+                            selectedFile: $selectedFile,
+                            analysisViewModel: analysisViewModel
+                        )
 
                         TargetLanguageSectionView(
                             selectedLanguage: $selectedLanguage,
@@ -34,9 +40,21 @@ struct NewTranslationView: View {
 
                         Spacer()
 
-                        Button(action: submitTranslation) {
+                        Button(action: {
+                            print("Submit button tapped")
+                            print("Current file: \(String(describing: selectedFile))")
+                            print("Current analysis status: \(analysisViewModel.isAnalyzing)")
+                            print("Current bookInfo: \(String(describing: analysisViewModel.bookInfo))")
+                            
+                            Task {
+                                await startTranslation()
+                            }
+                        }) {
                             HStack {
                                 Text("提交翻译")
+                                if let wordCount = analysisViewModel.bookInfo?.wordCount {
+                                    Text("(\(TranslationPrice.formatPrice(TranslationPrice.calculatePrice(wordCount: wordCount, mode: translationSpeed))))")
+                                }
                                 Image(systemName: "arrow.right")
                             }
                             .frame(maxWidth: .infinity)
@@ -46,6 +64,11 @@ struct NewTranslationView: View {
                             .cornerRadius(10)
                         }
                         .disabled(selectedFile == nil || analysisViewModel.error != nil || analysisViewModel.isAnalyzing)
+                        .alert("支付失败", isPresented: $showingPaymentError) {
+                            Button("确定", role: .cancel) {}
+                        } message: {
+                            Text(paymentErrorMessage)
+                        }
                     }
                     .padding(.horizontal, 16)
                 }
@@ -78,6 +101,34 @@ struct NewTranslationView: View {
 
         viewModel.addBook(newBook)
         dismiss()
+    }
+
+    private func startTranslation() async {
+        print("Starting translation...")
+        print("AnalysisViewModel state:")
+        print("- isAnalyzing: \(analysisViewModel.isAnalyzing)")
+        print("- error: \(String(describing: analysisViewModel.error))")
+        print("- bookInfo: \(String(describing: analysisViewModel.bookInfo))")
+        
+        guard let wordCount = analysisViewModel.bookInfo?.wordCount else {
+            print("Word count is nil")
+            return
+        }
+        
+        print("Word count: \(wordCount)")
+        
+        do {
+            print("Attempting to purchase...")
+            try await storeService.purchase(wordCount: wordCount, mode: translationSpeed)
+            print("Purchase successful")
+            submitTranslation()
+        } catch StoreError.userCancelled {
+            print("Purchase cancelled by user")
+        } catch {
+            print("Purchase failed with error: \(error)")
+            paymentErrorMessage = error.localizedDescription
+            showingPaymentError = true
+        }
     }
 }
 

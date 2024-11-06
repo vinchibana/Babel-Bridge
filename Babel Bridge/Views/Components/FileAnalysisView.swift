@@ -3,9 +3,9 @@ import SwiftUI
 struct FileAnalysisView: View {
     @ObservedObject var viewModel: FileAnalysisViewModel
     let url: URL
-    
+
     var body: some View {
-        Group {
+        ScrollView {
             if viewModel.isAnalyzing {
                 ProgressView("正在解析文件并评估价格...")
             } else if let error = viewModel.error {
@@ -22,20 +22,37 @@ struct FileAnalysisView: View {
                         .multilineTextAlignment(.center)
                         .padding()
                 }
-            }  else if let wordCount = viewModel.bookInfo?.wordCount {  // 修改这里
+            } else if let wordCount = viewModel.bookInfo?.wordCount { // 修改这里
+                // ... existing code ...
                 List {
-                    Section("统计信息") {
+                    Section {
                         BookInfoView(title: "文件名", value: url.lastPathComponent)
                         BookInfoView(title: "总字数", value: formatNumber(wordCount))
+                    } header: {
+                        Text("统计信息")
                     }
-                }
+                    Section {
+                        BookInfoView(
+                            title: "标准模式价格",
+                            value: TranslationPrice.formatPrice(TranslationPrice.calculatePrice(wordCount: wordCount, mode: .standard))
+                        )
+                        BookInfoView(
+                            title: "快速模式价格",
+                            value: TranslationPrice.formatPrice(TranslationPrice.calculatePrice(wordCount: wordCount, mode: .fast))
+                        )
+                    } header: {
+                        Text("价格")
+                    }
+                }.listStyle(.plain)
             }
         }
         .onAppear {
-            viewModel.analyzeFile(url)
+            Task {
+                await viewModel.analyzeFile(url)
+            }
         }
     }
-    
+
     private func formatNumber(_ number: Int) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -47,7 +64,7 @@ struct FileAnalysisView: View {
 struct BookInfoView: View {
     let title: String
     let value: String
-    
+
     var body: some View {
         HStack {
             Text(title)
@@ -58,11 +75,10 @@ struct BookInfoView: View {
     }
 }
 
-
 // 预览
 struct FileAnalysisView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
+        ScrollView {
             // 加载中状态
             FileAnalysisView(
                 viewModel: {
@@ -72,7 +88,7 @@ struct FileAnalysisView_Previews: PreviewProvider {
                 }(),
                 url: URL(fileURLWithPath: "example.epub")
             )
-            
+
             // 显示结果状态
             FileAnalysisView(
                 viewModel: {
@@ -80,14 +96,14 @@ struct FileAnalysisView_Previews: PreviewProvider {
                     vm.bookInfo = BookInfo(
                         title: "示例书籍",
                         author: "作者名",
-                        wordCount: 100000,
+                        wordCount: 100_000,
                         language: "中文"
                     )
                     return vm
                 }(),
                 url: URL(fileURLWithPath: "example.epub")
             )
-            
+
             // 错误状态
             FileAnalysisView(
                 viewModel: {

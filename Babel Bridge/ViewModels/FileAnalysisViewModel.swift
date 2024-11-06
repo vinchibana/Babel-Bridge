@@ -13,30 +13,24 @@ class FileAnalysisViewModel: ObservableObject {
         bookInfo = nil
     }
     
-    func analyzeFile(_ url: URL) {
+    @MainActor
+    func analyzeFile(_ url: URL) async {
         isAnalyzing = true
         error = nil
         bookInfo = nil
         
-        Task {
-            do {
-                let analysis = try epubService.analyzeEPUB(at: url)
-                
-                DispatchQueue.main.async {
-                    self.bookInfo = BookInfo(
-                        title: analysis.title,
-                        author: analysis.author,
-                        wordCount: analysis.wordCount,
-                        language: analysis.language
-                    )
-                    self.isAnalyzing = false
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.error = error
-                    self.isAnalyzing = false
-                }
-            }
+        do {
+            let analysis = try await epubService.analyzeEPUB(at: url)
+            self.bookInfo = BookInfo(
+                title: analysis.title,
+                author: analysis.author,
+                wordCount: analysis.wordCount,
+                language: analysis.language
+            )
+            self.isAnalyzing = false
+        } catch {
+            self.error = error
+            self.isAnalyzing = false
         }
     }
 }
@@ -46,4 +40,4 @@ struct BookInfo {
     let author: String?
     let wordCount: Int
     let language: String?
-} 
+}

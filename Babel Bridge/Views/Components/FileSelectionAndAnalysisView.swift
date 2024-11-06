@@ -2,10 +2,10 @@ import SwiftUI
 
 struct FileSelectionAndAnalysisView: View {
     @Binding var selectedFile: URL?
-    @StateObject private var analysisViewModel = FileAnalysisViewModel()
+    @ObservedObject var analysisViewModel: FileAnalysisViewModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 8) {
             if selectedFile == nil {
                 // 未选择文件时显示文件选择视图
                 FileUploadSectionView(selectedFile: $selectedFile)
@@ -28,24 +28,47 @@ struct FileSelectionAndAnalysisView: View {
 
                     if analysisViewModel.isAnalyzing {
                         // 分析中状态
-                        ProgressView("正在解析文件...")
+                        ProgressView("正在分析文件...")
                             .frame(maxWidth: .infinity, alignment: .center)
                     } else if let error = analysisViewModel.error {
                         // 错误状态
                         FileAnalysisErrorView(error: error)
-                    } else if analysisViewModel.bookInfo != nil {
+                    } else if let bookInfo = analysisViewModel.bookInfo {
                         // 显示书籍信息
-                        BookDetailView(bookInfo: analysisViewModel.bookInfo!)
+                        BookDetailView(bookInfo: bookInfo)
                     }
                 }
                 .padding()
                 .background(Color(.systemGray6))
                 .cornerRadius(10)
             }
+
+//            if let url = selectedFile {
+//                // 添加文件分析状态显示
+//                if analysisViewModel.isAnalyzing {
+//                    ProgressView("正在分析文件...")
+//                } else if let error = analysisViewModel.error {
+//                    Text("分析错误: \(error.localizedDescription)")
+//                        .foregroundColor(.red)
+//                } else if let bookInfo = analysisViewModel.bookInfo {
+//                    VStack(alignment: .leading) {
+////                        Text("文件名: \(url.lastPathComponent)")
+////                        Text("字数: \(bookInfo.wordCount)")
+//                    }
+//                }
+//            }
         }
         .onChange(of: selectedFile) { newValue in
+            print("Selected file changed: \(String(describing: newValue))")
             if let url = newValue {
-                analysisViewModel.analyzeFile(url)
+                Task {
+                    print("Starting file analysis...")
+                    await analysisViewModel.analyzeFile(url)
+                    print("File analysis completed")
+                    print("BookInfo after analysis: \(String(describing: analysisViewModel.bookInfo))")
+                }
+            } else {
+                analysisViewModel.reset()
             }
         }
     }
