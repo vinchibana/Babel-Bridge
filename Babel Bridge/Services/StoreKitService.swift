@@ -27,21 +27,28 @@ class StoreKitService: ObservableObject {
             await loadProducts()
         }
     }
-
-    // 添加加载产品的方法
+    
     func loadProducts() async {
         print("Loading products...")
-        let productIds = Set(TranslationSpeed.allCases.flatMap { speed in
-            ["100k", "200k", "300k", "400k", "500k", "600k", "unlimited"].map { tier in
-                "translation.\(speed.rawValue.lowercased()).\(tier)"
-            }
-        })
+        let productIds: Set<String> = [
+            "sxk90xow58sg", // 10万字以下（标准）
+            "sxk90xow58sa", // 10万字以下（快速）
+            "sxk90xow58sb", // 10-20万字（标准）
+            "sxk90xow58sc", // 10-20万字（快速）
+            "sxk90xow58sd", // 20-30万字（标准）
+            "sxk90xow58se", // 20-30万字（快速）
+            "sxk90xow58f",  // 30万字以上（标准）
+            "sxk90xow58sh"  // 30万字以上（快速）
+        ]
 
         print("Product IDs to load: \(productIds)")
-
+        
         do {
             products = try await Product.products(for: productIds)
             print("Successfully loaded \(products.count) products")
+            for product in products {
+                print("Loaded product: \(product.id) - \(product.displayName)")
+            }
         } catch {
             print("Failed to load products: \(error)")
         }
@@ -51,39 +58,36 @@ class StoreKitService: ObservableObject {
         print("Purchase called with wordCount: \(wordCount), mode: \(mode)")
         purchaseState = .purchasing
 
-        // 构建产品 ID，例如: "translation.standard.100k"
         let productId = buildProductId(wordCount: wordCount, mode: mode)
         print("Built product ID: \(productId)")
         print("Currently loaded products: \(products.map { $0.id })")
-        // 从已加载的产品中查找
+        
         guard products.first(where: { $0.id == productId }) != nil else {
             print("Product not found: \(productId)")
-
+            print("Available product IDs: \(products.map { $0.id })")
             throw StoreError.notAllowed
         }
+        
         do {
-            // 获取产品信息
             let products = try await Product.products(for: [productId])
             guard let product = products.first else {
                 throw StoreError.notAllowed
             }
-            print("get")
-            // 发起购买
+            
             let result = try await product.purchase()
 
             switch result {
-            case let .success(verification):
-                // 验证购买
+            case .success(let verification):
                 switch verification {
-                case .verified:
+                case .verified(_):
                     purchaseState = .completed
-                case .unverified:
+                case .unverified(_, _):
                     throw StoreError.paymentFailed
                 }
-            case .userCancelled:
-                throw StoreError.userCancelled
             case .pending:
                 purchaseState = .purchasing
+            case .userCancelled:
+                throw StoreError.userCancelled
             @unknown default:
                 throw StoreError.paymentFailed
             }
@@ -94,25 +98,26 @@ class StoreKitService: ObservableObject {
     }
 
     private func buildProductId(wordCount: Int, mode: TranslationSpeed) -> String {
-        let tier: String
-
-        switch wordCount {
-        case ..<100_000:
-            tier = "100k"
-        case 100_000 ..< 200_000:
-            tier = "200k"
-        case 200_000 ..< 300_000:
-            tier = "300k"
-        case 300_000 ..< 400_000:
-            tier = "400k"
-        case 400_000 ..< 500_000:
-            tier = "500k"
-        case 500_000 ..< 600_000:
-            tier = "600k"
+        switch (wordCount, mode) {
+        case (..<100_000, .standard):
+            return "sxk90xow58sg"
+        case (..<100_000, .fast):
+            return "sxk90xow58sa"
+        case (100_000..<200_000, .standard):
+            return "sxk90xow58sb"
+        case (100_000..<200_000, .fast):
+            return "sxk90xow58sc"
+        case (200_000..<300_000, .standard):
+            return "sxk90xow58sd"
+        case (200_000..<300_000, .fast):
+            return "sxk90xow58se"
+        case (300_000..., .standard):
+            return "sxk90xow58f"
+        case (300_000..., .fast):
+            return "sxk90xow58sh"
         default:
-            tier = "unlimited"
+                fatalError("Unsupported translation speed or word count")
         }
-
-        return "translation.\(mode.rawValue.lowercased()).\(tier)"
+        
     }
 }

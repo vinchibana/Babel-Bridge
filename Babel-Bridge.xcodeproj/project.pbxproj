@@ -10,10 +10,12 @@
 		5002BBA22CD4301200FC1D46 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 5002BBA12CD4301200FC1D46 /* ZIPFoundation */; };
 		5002BBA52CD4308200FC1D46 /* SWXMLHash in Frameworks */ = {isa = PBXBuildFile; productRef = 5002BBA42CD4308200FC1D46 /* SWXMLHash */; };
 		5002BBE52CD449C400FC1D46 /* EPUBKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5002BBE42CD449C400FC1D46 /* EPUBKit */; };
+		50EE6D402CDC0508000D2685 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50EE6D3F2CDC0508000D2685 /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5002BB5E2CD41CDF00FC1D46 /* Babel Bridge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Babel Bridge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		50EE6D3F2CDC0508000D2685 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +34,7 @@
 				5002BBE52CD449C400FC1D46 /* EPUBKit in Frameworks */,
 				5002BBA52CD4308200FC1D46 /* SWXMLHash in Frameworks */,
 				5002BBA22CD4301200FC1D46 /* ZIPFoundation in Frameworks */,
+				50EE6D402CDC0508000D2685 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				5002BB602CD41CDF00FC1D46 /* Babel Bridge */,
+				50EE6D3E2CDC0508000D2685 /* Frameworks */,
 				5002BB5F2CD41CDF00FC1D46 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,6 +56,14 @@
 				5002BB5E2CD41CDF00FC1D46 /* Babel Bridge.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		50EE6D3E2CDC0508000D2685 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				50EE6D3F2CDC0508000D2685 /* StoreKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -273,7 +285,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Babel-Bridge-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Baber Bridge";
+				INFOPLIST_KEY_CFBundleDisplayName = "Babel Bridge";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -307,7 +319,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Babel-Bridge-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Baber Bridge";
+				INFOPLIST_KEY_CFBundleDisplayName = "Babel Bridge";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

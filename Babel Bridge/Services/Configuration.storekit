@@ -1,0 +1,197 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "42AB5873",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "1.89",
+      "familyShareable" : false,
+      "internalID" : "8D2BF320",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sxk90xow58sc",
+      "referenceName" : "书籍翻译服务10万-20 万字（快速） ",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "1.69",
+      "familyShareable" : false,
+      "internalID" : "D3D51128",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sxk90xow58sb",
+      "referenceName" : "书籍翻译服务10万-20 万字（标准）",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "5F384C44",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sxk90xow58sa",
+      "referenceName" : "书籍翻译服务10万字以下（快速） ",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "0.89",
+      "familyShareable" : false,
+      "internalID" : "E658AB86",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sxk90xow58sg",
+      "referenceName" : "书籍翻译服务10万字以下（标准） ",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "3.29",
+      "familyShareable" : false,
+      "internalID" : "F84FBBDC",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sxk90xow58se",
+      "referenceName" : "书籍翻译服务20万-30 万字（快速） ",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.89",
+      "familyShareable" : false,
+      "internalID" : "AE1586B7",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sxk90xow58sd",
+      "referenceName" : "书籍翻译服务20万-30 万字（标准） ",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "5.99",
+      "familyShareable" : false,
+      "internalID" : "9A3ADCC0",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sxk90xow58sh",
+      "referenceName" : "书籍翻译服务30万字以上（快速） ",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "3.99",
+      "familyShareable" : false,
+      "internalID" : "96ABAD07",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sxk90xow58f",
+      "referenceName" : "书籍翻译服务30万字以上（标准） ",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}
