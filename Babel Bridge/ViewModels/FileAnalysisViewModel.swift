@@ -20,14 +20,14 @@ class FileAnalysisViewModel: ObservableObject {
         
         Task {
             do {
-                let wordCount = try epubService.countWordsInEPUB(at: url)
+                let analysis = try epubService.analyzeEPUB(at: url)
                 
                 DispatchQueue.main.async {
                     self.bookInfo = BookInfo(
-                        title: url.lastPathComponent,
-                        author: nil,
-                        wordCount: wordCount,
-                        language: nil
+                        title: analysis.title,
+                        author: analysis.author,
+                        wordCount: analysis.wordCount,
+                        language: analysis.language
                     )
                     self.isAnalyzing = false
                 }
