@@ -14,11 +14,26 @@ class StoreKitService: ObservableObject {
     @Published private(set) var products: [Product] = []
     @Published private(set) var purchaseState: PurchaseState = .notStarted
 
-    enum PurchaseState {
+    enum PurchaseState: Equatable {
         case notStarted
         case purchasing
         case completed
         case failed(Error)
+        
+        static func == (lhs: PurchaseState, rhs: PurchaseState) -> Bool {
+            switch (lhs, rhs) {
+            case (.notStarted, .notStarted):
+                return true
+            case (.purchasing, .purchasing):
+                return true
+            case (.completed, .completed):
+                return true
+            case (.failed(let lhsError), .failed(let rhsError)):
+                return lhsError.localizedDescription == rhsError.localizedDescription
+            default:
+                return false
+            }
+        }
     }
 
     private init() {

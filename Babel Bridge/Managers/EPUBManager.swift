@@ -17,32 +17,41 @@ class EPUBManager: ObservableObject {
         isProcessing = true
         progress = 0
         
+        guard url.startAccessingSecurityScopedResource() else {
+            throw EPUBError.invalidFile
+        }
+        
+        defer {
+            url.stopAccessingSecurityScopedResource()
+        }
+        
         do {
-            // 1. 解析 EPUB 文件
-            let bookContent = try await parseEPUB(url: url)
+            // 获取文件信息
+            let bookInfo = try await EPUBService().analyzeEPUB(at: url)
             
-            // 2. 根据翻译模式和速度设置参数
-            let translationConfig = getTranslationConfig(mode: mode, speed: speed)
-            // 3. 执行翻译
-            let translatedContent = try await translate(
-                content: bookContent,
-                to: targetLanguage,
-                config: translationConfig
+            print("Starting translation request for: \(url.lastPathComponent)")
+            // 调用翻译服务
+            let translatedURL = try await TranslationService.shared.translateBook(
+                url: url,
+                mode: mode,
+                speed: speed,
+                wordCount: bookInfo.wordCount
             )
+            print("Translation completed, saved to: \(translatedURL.path)")
             
-            // 4. 创建新的 Book 对象
+            // 创建新的 Book 对象
             let book = Book(
+                title: bookInfo.title,
+                author: bookInfo.author ?? "未知作者",
                 fileName: url.lastPathComponent,
-                filePath: url.path,
+                filePath: translatedURL.path,
+                fileSize: (try? FileManager.default.attributesOfItem(atPath: translatedURL.path)[.size] as? Int64) ?? 0,
                 targetLanguage: targetLanguage,
                 translationMode: mode,
                 translationSpeed: speed,
-                translationStatus: .inProgress,
-                wordCount: 0
+                translationStatus: .completed,
+                wordCount: bookInfo.wordCount
             )
-            
-            // 5. 保存翻译结果
-            try await saveTranslation(book: book, content: translatedContent)
             
             isProcessing = false
             progress = 1.0
@@ -52,6 +61,7 @@ class EPUBManager: ObservableObject {
         } catch {
             isProcessing = false
             progress = 0
+            print("Translation error: \(error)")
             throw error
         }
     }

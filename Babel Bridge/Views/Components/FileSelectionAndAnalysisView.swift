@@ -42,21 +42,6 @@ struct FileSelectionAndAnalysisView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(10)
             }
-
-//            if let url = selectedFile {
-//                // 添加文件分析状态显示
-//                if analysisViewModel.isAnalyzing {
-//                    ProgressView("正在分析文件...")
-//                } else if let error = analysisViewModel.error {
-//                    Text("分析错误: \(error.localizedDescription)")
-//                        .foregroundColor(.red)
-//                } else if let bookInfo = analysisViewModel.bookInfo {
-//                    VStack(alignment: .leading) {
-////                        Text("文件名: \(url.lastPathComponent)")
-////                        Text("字数: \(bookInfo.wordCount)")
-//                    }
-//                }
-//            }
         }
         .onChange(of: selectedFile) { newValue in
             print("Selected file changed: \(String(describing: newValue))")
@@ -162,5 +147,3 @@ struct BookInfoRow: View {
         }
     }
 }
-
-

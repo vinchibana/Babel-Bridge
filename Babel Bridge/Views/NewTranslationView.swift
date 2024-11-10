@@ -13,6 +13,8 @@ struct NewTranslationView: View {
     @StateObject private var storeService = StoreKitService.shared
     @State private var showingPaymentError = false
     @State private var paymentErrorMessage = ""
+    @State private var connectionTestMessage: String = ""
+    @State private var showingConnectionTest = false
 
     // 常量
     private let availableLanguages = ["英语", "日语", "韩语", "法语", "德语"]
@@ -69,6 +71,24 @@ struct NewTranslationView: View {
                         } message: {
                             Text(paymentErrorMessage)
                         }
+
+                        Button("测试服务器连接") {
+                            Task {
+                                do {
+                                    connectionTestMessage = "正在测试连接..."
+                                    showingConnectionTest = true
+                                    let isConnected = try await TranslationService.shared.testConnection()
+                                    connectionTestMessage = isConnected ? "连接成功" : "连接失败"
+                                } catch {
+                                    connectionTestMessage = "连接错误: \(error.localizedDescription)"
+                                }
+                            }
+                        }
+                        .alert("连接测试", isPresented: $showingConnectionTest) {
+                            Button("确定", role: .cancel) {}
+                        } message: {
+                            Text(connectionTestMessage)
+                        }
                     }
                     .padding(.horizontal, 16)
                 }
@@ -104,30 +124,54 @@ struct NewTranslationView: View {
     }
 
     private func startTranslation() async {
-        print("Starting translation...")
-        print("AnalysisViewModel state:")
-        print("- isAnalyzing: \(analysisViewModel.isAnalyzing)")
-        print("- error: \(String(describing: analysisViewModel.error))")
-        print("- bookInfo: \(String(describing: analysisViewModel.bookInfo))")
-        
-        guard let wordCount = analysisViewModel.bookInfo?.wordCount else {
-            print("Word count is nil")
+        print("Starting translation process...")
+        guard let url = selectedFile,
+              let wordCount = analysisViewModel.bookInfo?.wordCount else {
+            print("Missing required information")
             return
         }
         
-        print("Word count: \(wordCount)")
-        
         do {
-            print("Attempting to purchase...")
-            try await storeService.purchase(wordCount: wordCount, mode: translationSpeed)
-            print("Purchase successful")
-            submitTranslation()
-        } catch StoreError.userCancelled {
-            print("Purchase cancelled by user")
+            // 1. 检查支付状态
+            if storeService.purchaseState == .notStarted {
+                // 2. 尝试购买
+                print("Attempting to purchase...")
+                try await storeService.purchase(wordCount: wordCount, mode: translationSpeed)
+            }
+            
+            // 3. 确认购买完成
+            guard storeService.purchaseState == .completed else {
+                print("Purchase not completed. Current state: \(storeService.purchaseState)")
+                if case .failed(let error) = storeService.purchaseState {
+                    throw error
+                }
+                return
+            }
+            
+            print("Purchase successful, proceeding with translation...")
+            
+            // 4. 开始翻译
+            print("Starting translation...")
+            let translatedBook = try await EPUBManager.shared.translateBook(
+                url: url,
+                targetLanguage: selectedLanguage,
+                mode: translationMode,
+                speed: translationSpeed
+            )
+            
+            // 5. 添加到书籍列表
+            print("Adding translated book to library...")
+            await MainActor.run {
+                viewModel.addBook(translatedBook)
+                dismiss()
+            }
+            
         } catch {
-            print("Purchase failed with error: \(error)")
-            paymentErrorMessage = error.localizedDescription
-            showingPaymentError = true
+            await MainActor.run {
+                print("Error during process: \(error)")
+                paymentErrorMessage = error.localizedDescription
+                showingPaymentError = true
+            }
         }
     }
 }
