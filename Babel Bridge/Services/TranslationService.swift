@@ -4,6 +4,7 @@ enum TranslationError: Error {
     case uploadFailed
     case serverError(String)
     case invalidResponse
+    case invalidURL(String)
 }
 
 class TranslationService {
@@ -21,7 +22,7 @@ class TranslationService {
         let boundary = UUID().uuidString
         
         guard let requestURL = URL(string: "\(baseURL)/translate") else {
-            throw TranslationError.invalidResponse
+            throw TranslationError.invalidURL("\(baseURL)/translate")
         }
         
         print("TranslationService: Preparing request to \(requestURL)")
@@ -113,4 +114,4 @@ class TranslationService {
             throw error
         }
     }
-} 
+}
